@@ -1,0 +1,10 @@
+1. Descargar Azure Data Studio desde aqui:
+https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15
+
+2. Datos de conexión a base de datos:
+Servidor: cursoserver.database.windows.net
+base de datos: cursosql
+Usuarios: alumno0 a alumno9
+Password: Patata.123
+
+residencial@sleepby.com

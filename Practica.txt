@@ -1,0 +1,168 @@
+SELECT population as país 
+FROM world
+WHERE name = 'Germany';
+
+SELECT name, population 
+FROM world
+WHERE name IN ('Sweden', 'Norway', 'Denmark');
+
+SELECT name, area FROM world
+WHERE area BETWEEN 200000 AND 250000
+
+--Show the name and population in millions for the countries of the continent 'South America'. Divide the population by 1000000 to get population in millions.
+SELECT name, population/1000000
+FROM world
+WHERE continent='South America';
+
+--Give the name and the per capita GDP for those countries with a population of at least 200 million.
+--per capita GDP is the GDP divided by the population GDP/population
+
+SELECT name, GDP/population as 'per capita GDP'
+FROM world 
+WHERE population > 200000000;
+
+--Show the name and population for France, Germany, Italy
+SELECT name, population
+FROM world
+WHERE name IN ('France','Germany','Italy');
+
+--Show the countries which have a name that includes the word 'United'
+
+SELECT name 
+FROM world
+WHERE name LIKE '%United%';
+
+---Two ways to be big: A country is big if it has an area of more than 3 million sq km or it has a population of more than 250 million.
+--Show the countries that are big by area or big by population. Show name, population and area.
+
+SELECT name, population, area
+FROM world 
+WHERE area > 3000000 or population > 250000000;
+
+--nombrar objeto en SQL SERVER: nombrebd.nombreEsquema.NombreObjeto(tabla,vista)
+SELECT top 10 *
+FROM cursosql.[HR].[Employees];
+
+---Exclusive OR (XOR). Show the countries that are big by area (more than 3 million) or big by population (more than 250 million) but not both. Show name, population and area.
+
+SELECT name,population,area
+FROM world
+WHERE area >3000000 XOR population > 250000000;
+
+
+---Show the name and population in millions and the GDP in billions for the countries of the continent 'South America'. Use the ROUND function to show the values to two decimal places.
+---For South America show population in millions and GDP in billions both to 2 decimal places.	
+
+select name, round(population/1000000,2), ROUND(GDP/1000000000,2)
+FROM world
+where continent ='South America';
+
+--Bahamas has three a - who else?
+--Find the countries that have three or more a in the name
+
+SELECT name FROM world
+WHERE name LIKE '%a%a%a%';
+
+---India and Angola have an n as the second character. You can use the underscore as a single character wildcard
+SELECT name FROM world
+WHERE name LIKE '_n%'
+ORDER BY name
+
+--Find the countries that have two "o" characters separated by two others.
+SELECT name 
+FROM world
+WHERE name LIKE '%o__o%';
+
+--Find the countries that have exactly four characters.
+SELECT name FROM world
+WHERE name LIKE '____' 
+ 
+--Find the country where the name is the capital city.
+
+SELECT name
+FROM world
+WHERE name = capital;
+
+--Find the country where the capital is the country plus "City".
+--The concat function 
+
+SELECT name
+FROM world
+WHERE capital = concat(name, ' City');
+
+
+---Show the name and per-capita GDP for those countries with a GDP of at least one trillion (1000000000000; that is 12 zeros). Round this value to the nearest 1000.
+
+--Show per-capita GDP for the trillion dollar countries to the nearest $1000.
+
+SELECT name, ROUND(gdp/population,-3)
+  FROM world
+  WHERE
+  gdp>1000000000000;
+  
+ ---Show the name and capital where the name and the capital have the same number of characters.
+ SELECT name,capital
+FROM world
+WHERE LENGTH(name) = LENGTH(capital);
+
+--Show the name and the capital where the first letters of each match. Don't include countries where the name and the capital are the same word.
+--You can use the function LEFT to isolate the first character.
+--You can use <> as the NOT EQUALS operator.
+SELECT name,capital
+FROM world
+where LEFT(name,1)=LEFT(capital,1) and 
+name <> capital;
+
+---Find the country that has all the vowels and no spaces in its name.
+
+SELECT name FROM world 
+WHERE name LIKE '%a%' AND 
+name  LIKE '%e%' AND 
+name  LIKE '%i%' AND 
+name  LIKE '%o%' AND 
+name  LIKE '%u%' AND 
+name NOT LIKE '% %'
+
+--GROUP BY and HAVING. The HAVING clause is tested after the GROUP BY. You can test the aggregated values with a HAVING clause.
+--- Show the total population of those continents with a total population of at least half a billion.
+
+SELECT continent, SUM(population)
+  FROM world
+ GROUP BY continent
+HAVING SUM(population)>500000000
+
+---List the continents that have a total population of at least 100 million.
+select continent
+from world
+group by continent
+having sum(population)>100000000;
+
+---Show the number of different winners for each subject.
+
+select subject, count(distinct winner)
+from nobel
+group by subject;
+
+---Show the years in which three prizes were given for Physics.
+
+select yr
+from nobel 
+where subject='Physics'
+group by yr
+having count(winner) =3;
+
+
+-- Show winners who have won more than once.
+select winner
+from nobel 
+group by winner
+having count(winner)>1;
+
+--Show the year and subject where 3 prizes were given. Show only years 2000 onwards.
+
+select yr, subject
+from nobel 
+where yr>=2000
+group by yr, subject 
+having count(distinct winner)>=3;
+
